@@ -1,24 +1,20 @@
 use rand::Rng;
 use rusqlite::types::Value;
 use rusqlite::{Connection, Result, Rows};
-// use std::collections::HashMap;
 
 fn main() -> Result<()> {
-    let mut stitches: Vec<String> = Vec::new(); //random
+    let mut stitches: Vec<String> = Vec::new(); //random vector. EXCUSE THE NAME.
     let strength: usize = 8;
 
-    let data_base = Connection::open("./aerospace.db")?; //open db
-    let mut dust = data_base.prepare(
+    let data_base = Connection::open("./aerospace.db")?; //open db a normal name ???
+    let mut dust = data_base.prepare( 
         "SELECT name FROM sqlite_master WHERE type='table' AND name !='sqlite_sequence';",
-    )?;
+    )?; // WHO TF CALL THEIR QUERY DUST???? yh ig it's me woooooo
     let mut tables = dust.query_map([], |row| row.get::<_, String>(0))?;
     let mut query: String;
     for table in tables {
         let table = table?;
-        //println!(
-        //    "*******************___TABLE: {}____*************************************",
-        //    table
-        //);
+ 
         let limit = if table == "fundamentals" {
             strength * 8
         } else if table == "punc" {
@@ -49,8 +45,13 @@ fn main() -> Result<()> {
 
     use rand::seq::SliceRandom;
     let mut rng_fut = rand::rng();
-    stitches.shuffle(&mut rng_fut);
-    let output = stitches.join(" ");
+    stitches.shuffle(&mut rng_fut);  
+    let output = stitches.join(" "); 
+ //this will group up the output into a single line. also if you want you can make the output crazy long
+// with the exact same energy if you put the output to be inside a for loop like this 
+// for term in stitches { 
+// let output = stitches.join(" ");
+// println!("{output}"); }
 
     println!("{output}.");
     Ok(())
