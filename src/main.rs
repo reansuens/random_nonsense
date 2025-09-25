@@ -43,7 +43,7 @@ fn main() -> Result<()> {
 
     use rand::seq::SliceRandom;
     let mut rng_fut = rand::rng();
-    stitches.shuffle(&mut rng_fut);  
+    stitches.shuffle(&mut rng_fut);       // btw it took me hours to figure out if there is a .shuffle() and turned out yh I only needed to use that crate above
     let output = stitches.join(" "); 
  //this will group up the output into a single line. also if you want you can make the output crazy long
 // with the exact same energy if you put the output to be inside a for loop like this 
