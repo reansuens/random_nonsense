@@ -1,6 +1,5 @@
-use rand::Rng;
 use rusqlite::types::Value;
-use rusqlite::{Connection, Result, Rows};
+use rusqlite::{Connection, Result};
 
 fn main() -> Result<()> {
     let mut stitches: Vec<String> = Vec::new(); //random vector. EXCUSE THE NAME.
@@ -10,7 +9,7 @@ fn main() -> Result<()> {
     let mut dust = data_base.prepare( 
         "SELECT name FROM sqlite_master WHERE type='table' AND name !='sqlite_sequence';",
     )?; // WHO TF CALL THEIR QUERY DUST???? yh ig it's me woooooo
-    let mut tables = dust.query_map([], |row| row.get::<_, String>(0))?;
+    let tables = dust.query_map([], |row| row.get::<_, String>(0))?;
     let mut query: String;
     for table in tables {
         let table = table?;
@@ -25,10 +24,9 @@ fn main() -> Result<()> {
         query = format!("SELECT * FROM {} ORDER BY RANDOM() LIMIT {}", table, limit);
 
         let mut stmt = data_base.prepare(&query)?;
-        let column_count = stmt.column_count();
+//        let column_count = stmt.column_count();  // this is how you get column count in rusqlite ig.
 
         let rows = stmt.query_map([], |row| {
-            let mut record: Vec<String> = Vec::new();
             let val: Value = row.get(1)?;
             if let Value::Text(txt) = val {
                 Ok(Some(txt))
