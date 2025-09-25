@@ -1,0 +1,57 @@
+use rand::Rng;
+use rusqlite::types::Value;
+use rusqlite::{Connection, Result, Rows};
+// use std::collections::HashMap;
+
+fn main() -> Result<()> {
+    let mut stitches: Vec<String> = Vec::new(); //random
+    let strength: usize = 8;
+
+    let data_base = Connection::open("./aerospace.db")?; //open db
+    let mut dust = data_base.prepare(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name !='sqlite_sequence';",
+    )?;
+    let mut tables = dust.query_map([], |row| row.get::<_, String>(0))?;
+    let mut query: String;
+    for table in tables {
+        let table = table?;
+        //println!(
+        //    "*******************___TABLE: {}____*************************************",
+        //    table
+        //);
+        let limit = if table == "fundamentals" {
+            strength * 8
+        } else if table == "punc" {
+            strength * 2
+        } else {
+            strength
+        };
+        query = format!("SELECT * FROM {} ORDER BY RANDOM() LIMIT {}", table, limit);
+
+        let mut stmt = data_base.prepare(&query)?;
+        let column_count = stmt.column_count();
+
+        let rows = stmt.query_map([], |row| {
+            let mut record: Vec<String> = Vec::new();
+            let val: Value = row.get(1)?;
+            if let Value::Text(txt) = val {
+                Ok(Some(txt))
+            } else {
+                Ok(None)
+            }
+        })?;
+        for row_output in rows {
+            if let Some(text) = row_output? {
+                stitches.push(text)
+            }
+        }
+    }
+
+    use rand::seq::SliceRandom;
+    let mut rng_fut = rand::rng();
+    stitches.shuffle(&mut rng_fut);
+    let output = stitches.join(" ");
+
+    println!("{output}.");
+    Ok(())
+}
