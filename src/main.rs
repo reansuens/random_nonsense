@@ -5,7 +5,7 @@ fn main() -> Result<()> {
     let mut stitches: Vec<String> = Vec::new(); //random vector. EXCUSE THE NAME.
     let strength: usize = 8;
 
-    let data_base = Connection::open("./aerospace.db")?; //open db a normal name ???
+    let data_base = Connection::open("./aerospace.db")?; //open db a normal name ??
     let mut dust = data_base.prepare( 
         "SELECT name FROM sqlite_master WHERE type='table' AND name !='sqlite_sequence';",
     )?; // WHO TF CALL THEIR QUERY DUST???? yh ig it's me woooooo
