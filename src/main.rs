@@ -1,6 +1,5 @@
 use rusqlite::types::Value;
 use rusqlite::{Connection, Result};
-
 fn main() -> Result<()> {
     let mut stitches: Vec<String> = Vec::new(); //random vector. EXCUSE THE NAME.
     let strength: usize = 8;
